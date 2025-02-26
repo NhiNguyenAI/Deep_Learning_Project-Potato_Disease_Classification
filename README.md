@@ -55,14 +55,6 @@ The model will predict the disease category of the given image and display the r
 
 After training, evaluate the model using the validation dataset to check the accuracy and performance. You can also use metrics like confusion matrix, precision, recall, and F1-score to assess the model's performance in more detail.
 
-## License
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
-
-## Acknowledgments
-
-This project was inspired by the tutorial from CodeBasics on YouTube. You can view the tutorial at [this link](https://www.youtube.com/watch?v=dGtDTjYs3xc&list=PLeo1K3hjS3utJFNGyBpIvjWgSDY0eOE8S).
-
 
 
 
