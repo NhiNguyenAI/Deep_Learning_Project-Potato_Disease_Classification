@@ -80,8 +80,25 @@ def get_dataset_partition(dataset, train_size, val_size, shuffe = True, shuffle_
 dataset_train, test_dataset, val_dataset = get_dataset_partition(dataset, train_size, val_size)
 
 # Use Cache and prefetch to optimize the performance
-dataset_train = dataset_train.cache().prefetch(buffer_size = tf.data.AUTOTUNE)
-test_dataset = test_dataset.cache().prefetch(buffer_size = tf.data.AUTOTUNE)
-val_dataset = val_dataset.cache().prefetch(buffer_size = tf.data.AUTOTUNE)
+dataset_train = dataset_train.cache().shuffle(1000).prefetch(buffer_size = tf.data.AUTOTUNE)
+test_dataset = test_dataset.cache().shuffle(1000).prefetch(buffer_size = tf.data.AUTOTUNE)
+val_dataset = val_dataset.cache().shuffle(1000).prefetch(buffer_size = tf.data.AUTOTUNE)
 
+# --------------------------------------------------------------
+# Preprocess the data
+# --------------------------------------------------------------
+
+# resizing the image, for the tranning model, we need to resize the image to the same size
+resize_and_rescale = tf.keras.Sequential([
+    layers.experimental.preprocessing.Resizing(IMAGE_SIZE, IMAGE_SIZE),
+    layers.experimental.preprocessing.Rescaling(1./255)
+])
+
+# --------------------------------------------------------------
+# Data Augmentation
+# --------------------------------------------------------------
+data_augmentation = tf.keras.Sequential([
+    layers.experimental.preprocessing.RandomFlip("horizontal_and_vertical"),
+    layers.experimental.preprocessing.RandomRotation(0.2),
+])
 

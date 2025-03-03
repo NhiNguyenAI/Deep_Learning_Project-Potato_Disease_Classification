@@ -1,3 +1,18 @@
+"""
+************************************************************************
+ *
+ * optimize_tensorflow_pipeline.py
+ *
+ * Initial Creation:
+ *    Author      Nhi Nguyen
+ *    Created on  2025-03-03
+ *
+*************************************************************************
+"""
+
+'''
+    This File will be explain about the optimize the tensorflow pipeline
+'''
 import tensorflow as tf
 import time
 
