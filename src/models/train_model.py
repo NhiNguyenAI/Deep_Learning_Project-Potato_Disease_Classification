@@ -79,4 +79,9 @@ def get_dataset_partition(dataset, train_size, val_size, shuffe = True, shuffle_
 
 dataset_train, test_dataset, val_dataset = get_dataset_partition(dataset, train_size, val_size)
 
+# Use Cache and prefetch to optimize the performance
+dataset_train = dataset_train.cache().prefetch(buffer_size = tf.data.AUTOTUNE)
+test_dataset = test_dataset.cache().prefetch(buffer_size = tf.data.AUTOTUNE)
+val_dataset = val_dataset.cache().prefetch(buffer_size = tf.data.AUTOTUNE)
+
 
