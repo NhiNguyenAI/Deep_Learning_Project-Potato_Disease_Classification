@@ -72,6 +72,10 @@ data_augmentation = tf.keras.Sequential([
     tf.keras.layers.experimental.preprocessing.RandomRotation(0.2),
 ])
 
+# --------------------------------------------------------------
+# Convolutional neural network
+# --------------------------------------------------------------
+
 model = tf.keras.models.Sequential([
     data_augmentation,
     tf.keras.layers.Conv2D(16, 3, padding='same', activation='relu', input_shape=(180, 180, 3)),
@@ -113,6 +117,7 @@ model.save('flower_classification_model.h5')
 # --------------------------------------------------------------
 # data augmentation
 # --------------------------------------------------------------
+
 data_augmentation = tf.keras.Sequential([
     tf.keras.layers.experimental.preprocessing.RandomFlip("horizontal_and_vertical"),
     tf.keras.layers.experimental.preprocessing.RandomRotation(0.9),
