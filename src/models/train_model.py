@@ -186,6 +186,33 @@ def plot_accuracy_loss(history):
 
     plt.show()
 
-#--------------------------------------------------------------
+plot_accuracy_loss(history)
+
+#---------------------------------------------------------------------------------------------------------------------
 # 9 Predict the model
-#--------------------------------------------------------------
+# First Image is Potato___Early_blight
+# Result: Potato___Late_blight ---> Get misstakes
+#---------------------------------------------------------------------------------------------------------------------
+
+# Take frist image to predict
+for images_batch, labels_batch in test_dataset.take(1):
+    frist_image = images_batch[0].numpy().astype("uint8")
+    frist_label = labels_batch[0].numpy()
+
+    print("first image to predict")
+    plt.imshow(frist_image)
+    plt.show()
+    print(f"class: {class_names[frist_label]} and label: {frist_label}")
+
+
+# Predict the first image
+for images_batch, labels_batch in test_dataset.take(1):
+    batch_prediction = model.predict(images_batch)
+    frist_image = images_batch[0].numpy().astype("uint8")
+    frist_label = labels_batch[0].numpy()
+
+    print(f"first image to predict, class: {class_names[frist_label]} and label: {frist_label}")
+    print(f"batch_prediction: {batch_prediction[0]}")
+    print(f"Predicted class: {class_names[np.argmax(batch_prediction[0])]}")
+    print(f" max value: {np.argmax(batch_prediction[0])}")
+
