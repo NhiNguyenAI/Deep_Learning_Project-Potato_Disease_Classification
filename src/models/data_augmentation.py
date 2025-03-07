@@ -7,6 +7,7 @@ import tensorflow_datasets as tfds
 import pathlib
 import cv2
 from sklearn.model_selection import train_test_split
+import matplotlib.pyplot as plt
 
 # --------------------------------------------------------------
 # Load the dataset
@@ -66,7 +67,13 @@ x_test_scaled = x_test_scaled.astype(np.float32)
 # --------------------------------------------------------------
 num_classes = 5
 
+data_augmentation = tf.keras.Sequential([
+    tf.keras.layers.experimental.preprocessing.RandomZoom(0.3),
+    tf.keras.layers.experimental.preprocessing.RandomRotation(0.2),
+])
+
 model = tf.keras.models.Sequential([
+    data_augmentation,
     tf.keras.layers.Conv2D(16, 3, padding='same', activation='relu', input_shape=(180, 180, 3)),
     tf.keras.layers.MaxPooling2D(),
     tf.keras.layers.Dropout(0.2),
@@ -99,3 +106,26 @@ history = model.fit(
 # Evaluate the model
 test_loss, test_accuracy = model.evaluate(x_test_scaled, y_test)
 print(f"Test Accuracy: {test_accuracy:.4f}")
+
+# Save the model
+model.save('flower_classification_model.h5')
+
+# --------------------------------------------------------------
+# data augmentation
+# --------------------------------------------------------------
+data_augmentation = tf.keras.Sequential([
+    tf.keras.layers.experimental.preprocessing.RandomFlip("horizontal_and_vertical"),
+    tf.keras.layers.experimental.preprocessing.RandomRotation(0.9),
+    tf.keras.layers.experimental.preprocessing.RandomZoom(0.9),
+])
+
+plt.axis('off')
+plt.imshow(x[0])
+
+
+
+plt.axis('off')
+plt.imshow(data_augmentation(x)[0].numpy().astype("uint8"))
+
+
+
