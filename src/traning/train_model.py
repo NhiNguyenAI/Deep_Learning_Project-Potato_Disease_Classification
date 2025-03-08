@@ -14,7 +14,6 @@ from tensorflow.keras import models, layers
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-import os
 
 # ---------------------------------------------------------------------------------------------------------------------
 # 1 Read data
@@ -250,7 +249,5 @@ for images, labels in test_dataset.take(1):
 # 10 Save the model
 # ---------------------------------------------------------------------------------------------------------------------
 
-model_version = max([int(i.split("_")[-1]) for i in os.listdir("../models")]) + 1
+model_version = 1
 model.save(f"../models/{model_version}")
-
-os.listdir(f"../models")
