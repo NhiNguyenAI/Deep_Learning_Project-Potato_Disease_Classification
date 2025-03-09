@@ -31,3 +31,7 @@ dependencies:
       - tensorflow_datasets==4.6.0
       - tensorflow_hub==0.13.0
       - opencv-python
+      - fastapi==0.65.2
+      - uvicorn>=0.22.0
+      - python-multipart==0.0.5
+      - pillow==8.2.0
