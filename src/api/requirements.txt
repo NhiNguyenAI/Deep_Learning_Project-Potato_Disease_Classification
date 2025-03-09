@@ -6,3 +6,5 @@ tensorflow
 tensorflow-serving-api
 matplotlib
 numpy
+
+# source venv/Scripts/activate
