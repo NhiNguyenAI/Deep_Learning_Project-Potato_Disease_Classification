@@ -1,7 +1,7 @@
 model_config_list {
   config {
     name: 'email_model'
-    base_path: '/48_tf_serving/saved_models'
+    base_path: '/tf_serving/saved_models'
     model_platform: 'tensorflow'
 	model_version_policy {
 	  specific {

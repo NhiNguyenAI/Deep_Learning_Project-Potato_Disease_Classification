@@ -20,6 +20,9 @@ def read_file_as_image(data) -> np.ndarray:
 MODEL = tf.keras.models.load_model("src/models/1")
 CLASS_NAMES = ["Early Blight", "Late Blight", "Healthy"]
 
+# Print model summary to verify it's loaded correctly
+print(MODEL.summary())
+
 # ----------------------------------------------------------------------------------------------------------------
 # API
 # ----------------------------------------------------------------------------------------------------------------
@@ -37,6 +40,9 @@ async def predict(
     try:
         # Read the image file asynchronously
         image = read_file_as_image(await file.read())
+        
+        # Check the image shape
+        print("Image shape:", image.shape)
         
         # Add a batch dimension (batch_size = 1)
         image_batch = np.expand_dims(image, axis=0)
@@ -62,3 +68,4 @@ async def predict(
 
 if __name__ == "__main__":
     run(app, host="localhost", port=8000)
+    

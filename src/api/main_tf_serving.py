@@ -1,8 +1,9 @@
 from fastapi import FastAPI, File, UploadFile
-from uvicorn import run
-from PIL import Image
-from io import BytesIO
+from fastapi.middleware.cors import CORSMiddleware
+import uvicorn
 import numpy as np
+from io import BytesIO
+from PIL import Image
 import tensorflow as tf
 import requests
 
@@ -11,52 +12,43 @@ app = FastAPI()
 # ----------------------------------------------------------------------------------------------------------------
 # Functions
 # ----------------------------------------------------------------------------------------------------------------
+endpoint = "http://localhost:8501/v1/models/potatoes/versions/2:predict"
 
-# Read the file as an image
-def read_file_as_image(data) -> np.ndarray:
-    image = np.array(Image.open(BytesIO(data)))  # Read the image and convert it to a numpy array
-    return image
-
-# Load the model with version 1
-# PROD_MODEL = tf.keras.models.load_model("src/models/1")
-# BASE_MODEL = tf.keras.models.load_model("src/models/1")
-
-endpoint = "http://localhost:8501/v1/models/potatoes:predict"
 CLASS_NAMES = ["Early Blight", "Late Blight", "Healthy"]
+
+@app.get("/ping")
+async def ping():
+    return "Hello, I am alive"
+
+def read_file_as_image(data) -> np.ndarray:
+    image = np.array(Image.open(BytesIO(data)))
+    return image
 
 # ----------------------------------------------------------------------------------------------------------------
 # API
 # ----------------------------------------------------------------------------------------------------------------
 
-# Root Endpoint
-@app.get("/")
-async def root():
-    return {"message": "Welcome to the Potato Disease Classification API!"}
-
-# Predict endpoint
 @app.post("/predict")
 async def predict(
-    file: UploadFile = File(...)  # Ensure the field name is "file"
+    file: UploadFile = File(...)
 ):
-    try:
-        # Read the image file asynchronously
-        image = read_file_as_image(await file.read())
-        
-        # Add a batch dimension (batch_size = 1)
-        image_batch = np.expand_dims(image, axis=0)
-        
-        # Get predictions from the model
-        json_data = {
-            "instances": image_batch.tolist()
-        }
-        reponse = requests.post(endpoint, json = json_data)
+    image = read_file_as_image(await file.read())
+    img_batch = np.expand_dims(image, 0)
 
-        pass
+    json_data = {
+        "instances": img_batch.tolist()
+    }
 
-    except Exception as e:
-        # Log the error and return a meaningful message
-        print(f"Error processing the file: {e}")
-        return {"error": "Failed to process the image. Please ensure the file is a valid image."}
+    response = requests.post(endpoint, json=json_data)
+    prediction = np.array(response.json()["predictions"][0])
+
+    predicted_class = CLASS_NAMES[np.argmax(prediction)]
+    confidence = np.max(prediction)
+
+    return {
+        "class": predicted_class,
+        "confidence": float(confidence)
+    }
 
 if __name__ == "__main__":
-    run(app, host="localhost", port=8000)
+    uvicorn.run(app, host='localhost', port=8000)
