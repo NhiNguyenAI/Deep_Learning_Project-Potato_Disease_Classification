@@ -4,6 +4,7 @@ from PIL import Image
 from io import BytesIO
 import numpy as np
 import tensorflow as tf
+import requests
 
 app = FastAPI()
 
@@ -17,8 +18,10 @@ def read_file_as_image(data) -> np.ndarray:
     return image
 
 # Load the model with version 1
-PROD_MODEL = tf.keras.models.load_model("src/models/1")
-BASE_MODEL = tf.keras.models.load_model("src/models/1")
+# PROD_MODEL = tf.keras.models.load_model("src/models/1")
+# BASE_MODEL = tf.keras.models.load_model("src/models/1")
+
+endpoint = "http://localhost:8501/v1/models/potatoes:predict"
 CLASS_NAMES = ["Early Blight", "Late Blight", "Healthy"]
 
 # ----------------------------------------------------------------------------------------------------------------
@@ -39,26 +42,17 @@ async def predict(
         # Read the image file asynchronously
         image = read_file_as_image(await file.read())
         
-        # Check the image shape
-        print("Image shape:", image.shape)
-        
         # Add a batch dimension (batch_size = 1)
         image_batch = np.expand_dims(image, axis=0)
-        print("Image batch shape:", image_batch.shape)
         
         # Get predictions from the model
-        predictions = PROD_MODEL.predict(image_batch)
-        print("Predictions:", predictions)
-        
-        # Get the predicted class and confidence
-        predicted_class_index = np.argmax(predictions[0])
-        predicted_class = CLASS_NAMES[predicted_class_index]
-        confidence = np.max(predictions[0])
-        
-        return {
-            "prediction_class": predicted_class,
-            "confidence": float(confidence)  # Convert to float for JSON response
+        json_data = {
+            "instances": image_batch.tolist()
         }
+        reponse = requests.post(endpoint, json = json_data)
+
+        pass
+
     except Exception as e:
         # Log the error and return a meaningful message
         print(f"Error processing the file: {e}")

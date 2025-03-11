@@ -17,15 +17,14 @@ def read_file_as_image(data) -> np.ndarray:
     return image
 
 # Load the model with version 1
-PROD_MODEL = tf.keras.models.load_model("src/models/1")
-BASE_MODEL = tf.keras.models.load_model("src/models/1")
+MODEL = tf.keras.models.load_model("src/models/1")
 CLASS_NAMES = ["Early Blight", "Late Blight", "Healthy"]
 
 # ----------------------------------------------------------------------------------------------------------------
 # API
 # ----------------------------------------------------------------------------------------------------------------
 
-# Root Endpoint
+# Root endpoint
 @app.get("/")
 async def root():
     return {"message": "Welcome to the Potato Disease Classification API!"}
@@ -39,15 +38,12 @@ async def predict(
         # Read the image file asynchronously
         image = read_file_as_image(await file.read())
         
-        # Check the image shape
-        print("Image shape:", image.shape)
-        
         # Add a batch dimension (batch_size = 1)
         image_batch = np.expand_dims(image, axis=0)
         print("Image batch shape:", image_batch.shape)
         
         # Get predictions from the model
-        predictions = PROD_MODEL.predict(image_batch)
+        predictions = MODEL.predict(image_batch)
         print("Predictions:", predictions)
         
         # Get the predicted class and confidence
