@@ -56,9 +56,10 @@ The model will predict the disease category of the given image and display the r
 After training, evaluate the model using the validation dataset to check the accuracy and performance. You can also use metrics like confusion matrix, precision, recall, and F1-score to assess the model's performance in more detail.
 
 ### Run the tf serving in Powershell Administrator
-'''
+```
 docker run -t --rm -p 8501:8501 -v C:\Users\User\Master_Dev\Projects\Deep_Learning_Project-Potato_Disease_Classification:/workspace tensorflow/serving --rest_api_port=8501 --model_config_file=/workspace/src/tf_serving/models.config
-'''
+```
+
 
 
 
